@@ -116,8 +116,8 @@ static void upload_mask(struct vision_data *filter, CVPixelBufferRef mask)
 
     const uint32_t width = (uint32_t) CVPixelBufferGetWidth(mask);
     const uint32_t height = (uint32_t) CVPixelBufferGetHeight(mask);
-    if (filter->mask_texture &&
-        (width != gs_texture_get_width(filter->mask_texture) || height != gs_texture_get_height(filter->mask_texture))) {
+    if (filter->mask_texture && (width != gs_texture_get_width(filter->mask_texture) ||
+                                 height != gs_texture_get_height(filter->mask_texture))) {
         gs_texture_destroy(filter->mask_texture);
         filter->mask_texture = NULL;
     }
@@ -281,8 +281,8 @@ static gs_texture_t *prepare_analysis_texture(struct vision_data *filter, gs_tex
 static CVPixelBufferRef copy_to_pixel_buffer(struct vision_data *filter, gs_texture_t *texture, uint32_t width,
                                              uint32_t height)
 {
-    if (filter->stagesurf &&
-        (width != gs_stagesurface_get_width(filter->stagesurf) || height != gs_stagesurface_get_height(filter->stagesurf))) {
+    if (filter->stagesurf && (width != gs_stagesurface_get_width(filter->stagesurf) ||
+                              height != gs_stagesurface_get_height(filter->stagesurf))) {
         gs_stagesurface_destroy(filter->stagesurf);
         filter->stagesurf = NULL;
     }
@@ -350,8 +350,7 @@ static bool submit_frame(struct vision_data *filter, struct frame_slot *slot, ui
         return false;
 
     uint32_t analysis_width, analysis_height;
-    gs_texture_t *analysis =
-        prepare_analysis_texture(filter, source, width, height, &analysis_width, &analysis_height);
+    gs_texture_t *analysis = prepare_analysis_texture(filter, source, width, height, &analysis_width, &analysis_height);
 
     CVPixelBufferRef input = copy_to_pixel_buffer(filter, analysis, analysis_width, analysis_height);
     if (!input)
@@ -557,8 +556,8 @@ static void vision_destroy(void *filter_ptr)
     struct vision_data *filter = filter_ptr;
 
     /* Wait for any segmentation still running; its block uses the filter. */
-    dispatch_sync(filter->mask_queue, ^{
-    });
+    dispatch_sync(filter->mask_queue, ^ {
+                  });
     dispatch_release(filter->mask_queue);
 
     [filter->request release];
